@@ -1,0 +1,14 @@
+{
+  "name": "cypress_guru99",
+  "version": "1.0.0",
+  "description": "Tests for demo.guru99.com with cypress.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Irina Ostrovskaya",
+  "license": "ISC",
+  "dependencies": {
+    "cypress": "^9.5.2"
+  }
+}
