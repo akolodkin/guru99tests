@@ -11,6 +11,5 @@ Cypress.Commands.add('getCorrectNavBarDropdownPage', (elementName, pageName, pag
         cy.get('ul.dropdown-menu').children().contains('a',pageName,pageHref).should('be.visible').click();
         cy.url().should('eq', pageLink);
         cy.go('back');
-    
     });
 });

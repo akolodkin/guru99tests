@@ -38,8 +38,11 @@ Cypress.Commands.add('getEmailRegistrationData', () => {
         });
         
 });
-/*
-Cypress.Commands.add('', () => {
-            
+
+Cypress.Commands.add('fillCustomerForm', (Name, Surname, Email, Address, Phone) => {
+    cy.get('input[id="fname"]').type(Name);
+    cy.get('input[id="lname"]').type(Surname);
+    cy.get('input[id="email"]').type(Email);
+    cy.get('textarea[name="addr"]').type(Address);
+    cy.get('input[name="telephoneno"]').type(Phone);
 });
-*/
