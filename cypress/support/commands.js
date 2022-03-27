@@ -38,3 +38,8 @@ Cypress.Commands.add('getEmailRegistrationData', () => {
         });
         
 });
+/*
+Cypress.Commands.add('', () => {
+            
+});
+*/

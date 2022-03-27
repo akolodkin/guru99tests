@@ -8,24 +8,18 @@ describe('Agile Project page testing', () => {
     });
     
     it('Correct Agile Project page redirect from Home page', () => {
-        /*FOR EVERYONE:
-        Test cases are written with LOG short description BEFORE test executions.
-        All test, modified for passing while BUGS still present in the system, are MARKED with BUG DETECTED.
-        */
         cy.log('LEGEND: Test-APOS-00000 Desciption - EXAMPLE - for test descriptions');
         cy.log('LEGEND: BUG DETECTED - EXAMPLE - if tests are modified to pass, but there are bugs!'); 
         cy.log('');
-        /* FOR ME: div '' unique identificator, so we can use it to get access to the element
-        div id=name => put # before id, like #name; ******* div name => put . before name, like .name;
-        */
+        
         cy.log('Test-APOS-00008 Home Page redirect to Agile Project page:');
         cy.log("BUG DETECTED: link is http:// instead of https://, test was modified to pass")
         cy.visit('https://demo.guru99.com/');
-        cy.get('.container-fluid').contains('a', 'Agile Project').should('be.visible').then ( a => {
+        cy.get('.container-fluid').contains('a', 'Agile Project')
+        .should('be.visible').then ( a => {
             cy.visit(a.attr('href').replace('http', 'https'));
         });
         cy.url().should('eq','https://demo.guru99.com/Agile_Project/Agi_V1/');
-        cy.log('');
     });
 
     it('Correct Agile Project page look', () => {
@@ -36,7 +30,6 @@ describe('Agile Project page testing', () => {
         cy.get('input[name="password"]').should('be.visible');
         cy.get('input[name="btnLogin"]').scrollIntoView().should('be.visible');
         cy.get('input[name="btnReset"]').scrollIntoView().should('be.visible');
-        cy.log('');
     });
 
     it('Valid login attempt check', () => {
@@ -46,21 +39,20 @@ describe('Agile Project page testing', () => {
         cy.get('input[name="password"]').type('Guru99');
         cy.get('input[name="btnLogin"]').click();
         cy.url().should('eq','https://demo.guru99.com/Agile_Project/Agi_V1/customer/Customerhomepage.php');
-        
-        /*//Question: can not get images
-        cy.get('img').should('have.attr','scr',"/Agile_Project/Agi_V1/customer/images/1.gif").and('be.visible');
-        cy.get('td').find('img').should('have.attr','src','/Agile_Project/Agi_V1/customer/images/3.gif').and('be.visible');
-        cy.get('td').find('img').should('have.attr','src','/Agile_Project/Agi_V1/customer/images/2.gif').and('be.visible');
-        */
-        cy.get('ul.menusubnav').children().contains('a','Customer','href=["Customerhomepage.php"]').should('be.visible').click();
+        cy.get('ul.menusubnav').children()
+        .contains('a','Customer','href=["Customerhomepage.php"]')
+        .should('be.visible').click();
         cy.url().should('eq','https://demo.guru99.com/Agile_Project/Agi_V1/customer/Customerhomepage.php');
-        cy.get('ul.menusubnav').children().contains('a','Mini Statement','href=["MiniStatementInput.php"]').should('be.visible').click();
+        cy.get('ul.menusubnav').children()
+        .contains('a','Mini Statement','href=["MiniStatementInput.php"]')
+        .should('be.visible').click();
         cy.url().should('eq','https://demo.guru99.com/Agile_Project/Agi_V1/customer/MiniStatementInput.php');
         cy.go('back');
-        cy.get('ul.menusubnav').children().contains('a','Log out','href=["Logout.php"]').should('be.visible').click();
+        cy.get('ul.menusubnav').children()
+        .contains('a','Log out','href=["Logout.php"]')
+        .should('be.visible').click();
         cy.on('window:confirm', () => true);
         cy.url().should('eq','https://demo.guru99.com/Agile_Project/Agi_V1/index.php');
-        cy.log('');
     });
 
     it('Reset button functionality check', () => {
