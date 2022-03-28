@@ -18,6 +18,22 @@ jobs:
           # Specify Browser since container image is compile with Firefox
           browser: chrome
           
+  cypress-run-chrome-87-mobile:
+    runs-on: ubuntu-latest
+    container: cypress/browsers:node12.18.3-chrome87-ff82
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          # Specify Browser since container image is compile with Firefox
+          browser: chrome
+          config: "viewportWidth=375,viewportHeight=667"
+          
   cypress-run-firefox-82:
     runs-on: ubuntu-latest
     container: cypress/browsers:node12.18.3-chrome87-ff82
