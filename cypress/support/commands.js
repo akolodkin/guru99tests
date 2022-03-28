@@ -46,3 +46,11 @@ Cypress.Commands.add('fillCustomerForm', (Name, Surname, Email, Address, Phone) 
     cy.get('textarea[name="addr"]').type(Address);
     cy.get('input[name="telephoneno"]').type(Phone);
 });
+
+Cypress.Commands.add('fillCardDataForm', (CardNumber, Month, Year, CVV) => {
+    cy.get('#card_nmuber').type(CardNumber);
+    cy.get('select[name="month"]').select(Month);
+    cy.get('select[name="year"]').select(Year);
+    cy.get('#cvv_code').type(CVV);
+
+});

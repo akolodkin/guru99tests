@@ -1,6 +1,6 @@
-//TIME for testing: 26.37
-//BUGS: 6, all reports in cy.log(BUG DETECTED: ...)
-//In progress: could be written tests for special chars and case 'submit->back->submit', but save time
+//TIME for testing: 
+//BUGS: 
+//In progress: no integration tests for bank (no actual bank systems integration), tests for 1 mistake and other fields being correct
 
 
 describe('Telecom Project page testing', () => {
@@ -8,7 +8,7 @@ describe('Telecom Project page testing', () => {
         cy.visit('https://demo.guru99.com/payment-gateway/index.php');
     });
     
-    it.skip('Redirection on Payment Gateway Page', () => {
+    it('Redirection on Payment Gateway Page', () => {
         cy.log('Test-APOS-? Redirection from home page check:');
         cy.visit('https://demo.guru99.com/');
         cy.get('.container-fluid').contains('a', 'Payment Gateway Project')
@@ -61,6 +61,88 @@ describe('Telecom Project page testing', () => {
         .and('have.attr','placeholder','CVV Code')
         .and('be.visible');
         cy.get('input[type="submit"]').should('have.attr','value','Pay $20.00');
+    });
+
+    it('Correct payment check', () => {
+        cy.log('Test-APOS-18 Valid card data + successful payment check:');
+        cy.get('select[name="quantity"]').select('3');
+        cy.get('input[type="submit"]').click();
+        cy.fillCardDataForm('4023016654636241','07','2023','241');
+        cy.get('input[type="submit"]').should('have.attr','value','Pay $60.00').click();
+        cy.url().should('contain','genearte_orderid.php?uid=');
+        cy.get('h2').contains('Payment successfull!').should('be.visible');
+        cy.get('td').eq(0).contains('Order ID').should('be.visible');
+        //cy.get('input[placeholder="Filter..."]:nth(2)').type("campaign1");
+        cy.get('td').eq(2).contains('Please Note Down Your OrderID').should('be.visible');
+    });
+
+    it('Not enough money check', () => {
+        cy.log('Test-APOS-18: Valid Card with NOT ENOUGH balance check');
+        cy.get('select[name="quantity"]').select('9');
+        cy.get('input[type="submit"]').click();
+        cy.fillCardDataForm('4023016654636241','07','2023','241');
+        cy.get('input[type="submit"]').should('have.attr','value','Pay $180.00').click();
+        cy.log('BUG DETECTED: payment is successful for cards with not enough credit card limit');
+        /*
+        cy.url().should('eq','https://demo.guru99.com/payment-gateway/process_purchasetoy.php');
+        cy.get('h2').contains('Payment successfull!').should('not.be.visible');
+        */
+    });
+
+    it('Empty fields payment attempt check', () => {
+        cy.log('Test-APOS-21: Blank input check:');
+        cy.get('input[type="submit"]').click();
+        cy.get('input[type="submit"]').should('have.attr','value','Pay $20.00').click();
+        cy.url().should('eq','https://demo.guru99.com/payment-gateway/process_purchasetoy.php');
+        cy.log('');
+
+        cy.get('select[name="month"]').select('07');
+        cy.get('select[name="year"]').select('2023');
+        cy.get('input[type="submit"]').click();
+        cy.on('window:alert', (text) => {
+            expect(text).to.eq('Check card number is 16 digits!');
+        });
+        cy.on('window:confirm', () => true);
+        cy.log('');
+
+        cy.get('#card_nmuber').type('4023016654636241');
+        cy.get('input[type="submit"]').click();
+        cy.log('BUG DETECTED: system allows payment with blank CVV code field');
+    });
+
+    it('Error notifications check', () => {
+        cy.log('Test-APOS-21: Blank input check:');
+        cy.get('input[type="submit"]').click();
+        cy.get('#card_nmuber').click();
+        cy.get('#cvv_code').click();
+        cy.get('#message1').contains('Field must not be blank').should('be.visible');
+        cy.get('#card_nmuber').click();
+        cy.get('#message2').contains('Field must not be blank').should('be.visible');
+        cy.log('');
+
+        cy.get('#card_nmuber').type('a');
+        cy.get('#cvv_code').type('a');
+        cy.get('#message1').contains('Characters are not allowed').should('be.visible');
+        cy.get('#message2').contains('Characters are not allowed').should('be.visible');
+        cy.log('');
+
+        cy.get('#card_nmuber').clear().type('!');
+        cy.get('#cvv_code').clear().type('!');
+        cy.get('#message1').contains('Special characters are not allowed').should('be.visible');
+        cy.get('#message2').contains('Special characters are not allowed').should('be.visible');
+        cy.log('');
+
+        cy.get('#card_nmuber').clear().type('1');
+        cy.get('#cvv_code').clear().type('1');
+        cy.get('#message1').contains('Please Input Correct 16 Digit.').should('be.visible');
+        cy.get('#message2').contains('Please Input Correct 3 Digit CVV.').should('be.visible');
+        cy.log('');
+
+        cy.get('#card_nmuber').clear().type('123456789012345');
+        cy.get('#cvv_code').clear().type('12');
+        cy.log('BUG DETECTED: error messages for not enough numbers input dissapear for longer input')
+        //cy.get('#message1').contains('Please Input Correct 16 Digit.').should('be.visible');
+        //cy.get('#message2').contains('Please Input Correct 3 Digit CVV.').should('be.visible');
     });
 
 });

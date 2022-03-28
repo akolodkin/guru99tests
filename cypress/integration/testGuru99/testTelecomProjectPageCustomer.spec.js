@@ -1,6 +1,6 @@
-//TIME for testing: 26.37
-//BUGS: 6, all reports in cy.log(BUG DETECTED: ...)
-//In progress: could be written tests for special chars and case 'submit->back->submit', but save time
+//TIME for testing: 23.02 sec
+//BUGS: 7, all reports in cy.log(BUG DETECTED: ...)
+//In progress: could be written tests for 1 field with error and other being correct, saving time
 
 describe('Telecom Project page testing', () => {
     beforeEach( () => {
@@ -28,7 +28,6 @@ describe('Telecom Project page testing', () => {
         cy.get('input[name="telephoneno"]').should('have.attr','placeholder','Mobile Number').and('have.attr','maxlength','12').and('be.visible');
         cy.get('input[type="submit"]').should('be.visible');
         cy.get('input[type="Reset"]').should('be.visible');
-        cy.log('');
     });
 
     it('Valid Add Customer form submittion', () => {
