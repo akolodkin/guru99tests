@@ -1,5 +1,5 @@
-//TIME for testing: 
-//BUGS: 
+//TIME for testing: 29.97 sec
+//BUGS: 4 (CRITICAL), all reports in cy.log(BUG DETECTED: ...)
 //In progress: no integration tests for bank (no actual bank systems integration), tests for 1 mistake and other fields being correct
 
 
@@ -72,7 +72,6 @@ describe('Telecom Project page testing', () => {
         cy.url().should('contain','genearte_orderid.php?uid=');
         cy.get('h2').contains('Payment successfull!').should('be.visible');
         cy.get('td').eq(0).contains('Order ID').should('be.visible');
-        //cy.get('input[placeholder="Filter..."]:nth(2)').type("campaign1");
         cy.get('td').eq(2).contains('Please Note Down Your OrderID').should('be.visible');
     });
 
@@ -143,6 +142,15 @@ describe('Telecom Project page testing', () => {
         cy.log('BUG DETECTED: error messages for not enough numbers input dissapear for longer input')
         //cy.get('#message1').contains('Please Input Correct 16 Digit.').should('be.visible');
         //cy.get('#message2').contains('Please Input Correct 3 Digit CVV.').should('be.visible');
+    });
+
+    it('Invalid card data', () => {
+        cy.log('Test-APOS-20, Test-APOS-22: Card with incorrect expiration data check:');
+        cy.get('input[type="submit"]').click();
+        cy.fillCardDataForm('4023016654636241','01','2017','241');
+        cy.get('input[type="submit"]').click();
+        cy.log('BUG DETECTED: card with incorrect exp.data allows payment');
+        //cy.url().should('eq','https://demo.guru99.com/payment-gateway/process_purchasetoy.php');
     });
 
 });
